@@ -11,14 +11,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.graphics.Color
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun DashboardToolbar(
+    onOpenMenu: (() -> Unit)? = null,
     onOpenHome: () -> Unit,
     onOpenAds: () -> Unit,
     onOpenProfile: () -> Unit,
@@ -27,16 +30,19 @@ fun DashboardToolbar(
     onOpenTerms: () -> Unit
 ) {
     TopAppBar(
-        title = { Text("Certiweb") },
-        actions = {
-            ToolbarAction(Icons.Filled.Home, "Inicio", onOpenHome)
-            ToolbarAction(Icons.Outlined.DirectionsCar, "Anuncios", onOpenAds)
-            ToolbarAction(Icons.Filled.Person, "Perfil", onOpenProfile)
-            ToolbarAction(Icons.Outlined.EventNote, "Reservas", onOpenReservation)
-            ToolbarAction(Icons.Outlined.Help, "Soporte", onOpenSupport)
-            ToolbarAction(Icons.Filled.Info, "Términos", onOpenTerms)
+        title = { Text("CertiWeb") },
+        navigationIcon = {
+            IconButton(onClick = { onOpenMenu?.invoke() }) {
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
+            }
         },
-        colors = TopAppBarDefaults.topAppBarColors()
+        actions = {},
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF1E4D2B),
+            titleContentColor = Color.White,
+            actionIconContentColor = Color.White,
+            navigationIconContentColor = Color.White
+        )
     )
 }
 
