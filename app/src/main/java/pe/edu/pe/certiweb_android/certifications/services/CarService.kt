@@ -56,6 +56,26 @@ class CarService {
         }
     }
 
+    suspend fun getCarPdf(id: String): Map<String, Any?> = withContext(Dispatchers.IO) {
+        try {
+            val request = Request.Builder()
+                .url("${Environment.baseUrl}/cars/$id/pdf")
+                .get()
+                .build()
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    if (responseBody != null) {
+                        return@withContext JSONObject(responseBody).toMap()
+                    }
+                }
+                throw Exception("Failed to get PDF: ${response.code}")
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun createCar(carData: Map<String, Any?>): Map<String, Any?>? = withContext(Dispatchers.IO) {
         try {
             val requestBody = JSONObject(carData).toString().toRequestBody(JSON)

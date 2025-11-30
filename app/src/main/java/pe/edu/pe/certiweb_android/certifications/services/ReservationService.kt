@@ -33,6 +33,24 @@ class ReservationService {
         }
     }
 
+    suspend fun getReservationsByUserId(userId: Int): List<Map<String, Any?>> = withContext(Dispatchers.IO) {
+        try {
+            val request = Request.Builder()
+                .url("${Environment.baseUrl}/reservations?userId=$userId")
+                .get()
+                .build()
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    val body = response.body?.string()
+                    if (body != null) return@withContext JSONArray(body).toList()
+                }
+                emptyList()
+            }
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
     suspend fun createReservation(data: Map<String, Any?>): Map<String, Any?>? = withContext(Dispatchers.IO) {
         try {
             val requestBody = JSONObject(data).toString().toRequestBody(JSON)
