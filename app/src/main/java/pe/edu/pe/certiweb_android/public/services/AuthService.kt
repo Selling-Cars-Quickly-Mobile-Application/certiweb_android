@@ -17,7 +17,7 @@ class AuthService(private val context: Context) {
     private val client: OkHttpClient = DioClient.okHttpClient
     private val JSON = "application/json; charset=utf-8".toMediaType()
 
-    suspend fun login(email: String, password: String): Map<String, Any> = withContext(Dispatchers.IO) {
+    suspend fun login(email: String, password: String, rememberMe: Boolean): Map<String, Any> = withContext(Dispatchers.IO) {
         try {
             val requestBody = JSONObject()
                 .put("email", email)
@@ -39,6 +39,7 @@ class AuthService(private val context: Context) {
                         if (token != null && token.isNotEmpty()) {
                             prefs.edit().apply {
                                 putString("authToken", token)
+                                putBoolean("rememberMe", rememberMe)
                                 putString("currentUser", JSONObject(mapOf(
                                     "id" to data["id"],
                                     "name" to data["name"],
@@ -109,7 +110,7 @@ class AuthService(private val context: Context) {
         }
     }
 
-    suspend fun loginAdmin(email: String, password: String): Map<String, Any> = withContext(Dispatchers.IO) {
+    suspend fun loginAdmin(email: String, password: String, rememberMe: Boolean): Map<String, Any> = withContext(Dispatchers.IO) {
         try {
             val requestBody = JSONObject()
                 .put("email", email)
@@ -136,6 +137,7 @@ class AuthService(private val context: Context) {
                         if (token != null && token.isNotEmpty()) {
                             prefs.edit().apply {
                                 putString("authToken", token)
+                                putBoolean("rememberMe", rememberMe)
                                 putString("currentUser", JSONObject(mapOf(
                                     "id" to data["id"],
                                     "name" to data["name"],
